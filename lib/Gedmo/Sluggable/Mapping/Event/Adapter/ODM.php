@@ -2,6 +2,8 @@
 
 namespace Gedmo\Sluggable\Mapping\Event\Adapter;
 
+use Doctrine\ODM\MongoDB\Iterator\CachingIterator;
+
 use Gedmo\Mapping\Event\Adapter\ODM as BaseAdapterODM;
 use Doctrine\ODM\MongoDB\Cursor;
 use Gedmo\Sluggable\Mapping\Event\SluggableAdapter;
@@ -44,7 +46,7 @@ final class ODM extends BaseAdapterODM implements SluggableAdapter
         $q->setHydrate(false);
 
         $result = $q->execute();
-        if ($result instanceof Cursor) {
+        if ($result instanceof Cursor || $result instanceof CachingIterator) {
             $result = $result->toArray();
         }
 
@@ -71,7 +73,7 @@ final class ODM extends BaseAdapterODM implements SluggableAdapter
         ;
         $q->setHydrate(false);
         $result = $q->execute();
-        if ($result instanceof Cursor) {
+        if ($result instanceof Cursor || $result instanceof CachingIterator) {
             $result = $result->toArray();
             foreach ($result as $targetObject) {
                 $slug = preg_replace("@^{$target}@smi", $replacement.$config['pathSeparator'], $targetObject[$config['slug']]);
@@ -105,7 +107,7 @@ final class ODM extends BaseAdapterODM implements SluggableAdapter
         ;
         $q->setHydrate(false);
         $result = $q->execute();
-        if ($result instanceof Cursor) {
+        if ($result instanceof Cursor || $result instanceof CachingIterator) {
             $result = $result->toArray();
             foreach ($result as $targetObject) {
                 $slug = preg_replace("@^{$replacement}@smi", $target, $targetObject[$config['slug']]);

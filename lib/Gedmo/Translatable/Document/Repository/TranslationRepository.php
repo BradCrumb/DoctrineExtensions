@@ -2,8 +2,9 @@
 
 namespace Gedmo\Translatable\Document\Repository;
 
+use Doctrine\ODM\MongoDB\Iterator\CachingIterator;
 use Gedmo\Translatable\TranslatableListener;
-use Doctrine\ODM\MongoDB\DocumentRepository;
+use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use Doctrine\ODM\MongoDB\Cursor;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\UnitOfWork;
@@ -137,7 +138,7 @@ class TranslationRepository extends DocumentRepository
 
             $q->setHydrate(false);
             $data = $q->execute();
-            if ($data instanceof Cursor) {
+            if ($data instanceof Cursor || $data instanceof CachingIterator) {
                 $data = $data->toArray();
             }
             if ($data && is_array($data) && count($data)) {
@@ -175,7 +176,7 @@ class TranslationRepository extends DocumentRepository
 
             $q->setHydrate(false);
             $result = $q->execute();
-            if ($result instanceof Cursor) {
+            if ($data instanceof Cursor || $data instanceof CachingIterator) {
                 $result = $result->toArray();
             }
             $id = count($result) ? $result[0]['foreignKey'] : null;
@@ -208,7 +209,7 @@ class TranslationRepository extends DocumentRepository
             $q->setHydrate(false);
             $data = $q->execute();
 
-            if ($data instanceof Cursor) {
+            if ($data instanceof Cursor || $data instanceof CachingIterator) {
                 $data = $data->toArray();
             }
             if ($data && is_array($data) && count($data)) {

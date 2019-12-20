@@ -2,6 +2,8 @@
 
 namespace Gedmo\Translatable\Mapping\Event\Adapter;
 
+use Doctrine\ODM\MongoDB\Iterator\CachingIterator;
+
 use Gedmo\Mapping\Event\Adapter\ODM as BaseAdapterODM;
 use Gedmo\Tool\Wrapper\AbstractWrapper;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadataInfo;
@@ -88,7 +90,7 @@ final class ODM extends BaseAdapterODM implements TranslatableAdapter
         }
         $q->setHydrate(false);
         $result = $q->execute();
-        if ($result instanceof Cursor) {
+        if ($result instanceof Cursor || $result instanceof CachingIterator) {
             $result = $result->toArray();
         }
 
@@ -115,7 +117,7 @@ final class ODM extends BaseAdapterODM implements TranslatableAdapter
         }
         $q = $qb->getQuery();
         $result = $q->execute();
-        if ($result instanceof Cursor) {
+        if ($result instanceof Cursor || $result instanceof CachingIterator) {
             $result = current($result->toArray());
         }
 
